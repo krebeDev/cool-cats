@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Layout from './components/Layout'
+import NotFound from './pages/NotFound'
+import Cat from './pages/Cat'
+import Home from './pages/Home'
 
-function App() {
+const App = (): JSX.Element => {
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Home />,
+      // TODO: Add errorElement prop
+    },
+    {
+      path: 'cats/:catId',
+      element: <Cat />,
+    },
+    {
+      path: '*',
+      element: <NotFound />,
+    },
+  ])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    // Add App Context here
+    <Layout>
+      <RouterProvider router={router} />
+    </Layout>
+  )
 }
 
-export default App;
+export default App
