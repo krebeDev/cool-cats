@@ -1,21 +1,14 @@
 import * as React from 'react'
 import { BreedFormProps } from './../types/index.type'
 
-const activeBreed = '' // move to context
-
 const BreedForm = ({ onSelect, breeds }: BreedFormProps): JSX.Element => {
   const [breed, setBreed] = React.useState<string>('')
 
-  const handleChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ): Promise<void> => {
-    setBreed(e.target.value)
-    await onSelect(breed)
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = e.target
+    setBreed(value)
+    onSelect(value)
   }
-
-  React.useEffect(() => {
-    setBreed(activeBreed)
-  }, [])
 
   return (
     <form>
