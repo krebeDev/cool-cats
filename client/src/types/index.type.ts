@@ -6,6 +6,6 @@ export interface CatSummary {
 }
 
 export interface BreedFormProps {
-  fetchCats: (next: string | null, breed?: string) => void
+  onSelect: (breed: string) => void
   breeds: any[]
 }
