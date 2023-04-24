@@ -10,10 +10,12 @@ const HomePage = (): JSX.Element => {
   const [catBreeds, setCatBreeds] = React.useState<any[]>([])
   const [nextBatchUrl, setNextBatchUrl] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
+  const [errors, setErrors] = React.useState<string>('')
 
   const fetchCats = async (
     next: string | null,
-    breed?: string
+    breed?: string | null,
+    sync: boolean = false
   ): Promise<void> => {
     const apiEndpoint = next
       ? next
@@ -23,7 +25,7 @@ const HomePage = (): JSX.Element => {
 
     try {
       const { data } = await axios.get(apiEndpoint)
-      setCats((cats) => [...cats, ...data.result])
+      setCats((cats) => (sync ? [...cats, ...data.result] : data.result))
       setNextBatchUrl(data.next)
       // Handle end of results case
     } catch (error) {
@@ -34,7 +36,7 @@ const HomePage = (): JSX.Element => {
   const fetchCatsBreeds = async (): Promise<void> => {
     try {
       const { data } = await axios.get(`${BASE_API_URL}/breeds`)
-      setCatBreeds(data.result)
+      setCatBreeds(data)
     } catch (error) {
       throw error
     }
@@ -46,7 +48,18 @@ const HomePage = (): JSX.Element => {
       await fetchCats(null)
       await fetchCatsBreeds()
     } catch (error) {
-      console.log(error)
+      setErrors('An unexpected error occured.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchCatsByBreed = async (breed: string): Promise<void> => {
+    try {
+      setLoading(true)
+      await fetchCats(null, breed)
+    } catch (error) {
+      setErrors('An unexpected error occured.')
     } finally {
       setLoading(false)
     }
@@ -54,33 +67,39 @@ const HomePage = (): JSX.Element => {
 
   React.useEffect(() => {
     ;(async () => {
-      await initPage()
+      initPage()
     })()
   }, [])
 
   return (
-    <section>
-      <h1>Welcome to the home of cool cats!</h1>
-      <BreedForm fetchCats={fetchCats} breeds={catBreeds} />
-      <div>
-        <ul>
-          {cats.map((cat) => (
-            <CatPhoto key={cat.id} cat={cat} />
-          ))}
-        </ul>
-        {nextBatchUrl && (
+    <>
+      {loading && <div>Loading...</div>}
+      {!loading && !errors && (
+        <section>
+          <h1>Welcome to the home of cool cats!</h1>
+          <BreedForm onSelect={fetchCatsByBreed} breeds={catBreeds} />
           <div>
-            <button
-              type='button'
-              onClick={() => fetchCats(nextBatchUrl as string)}
-              disabled={loading}
-            >
-              Load More
-            </button>
+            <ul className='row'>
+              {cats.map((cat) => (
+                <CatPhoto key={cat.id} cat={cat} />
+              ))}
+            </ul>
+            {nextBatchUrl && (
+              <div>
+                <button
+                  type='button'
+                  onClick={() => fetchCats(nextBatchUrl, null, true)}
+                  disabled={loading}
+                >
+                  Load More
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </section>
+        </section>
+      )}
+      {errors && <p>{errors}</p>}
+    </>
   )
 }
 
