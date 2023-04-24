@@ -7,10 +7,12 @@ interface APIResponse {
   next: string | null
 }
 
+const queryLimit = 10
+
 const getCats = async (page = '0'): Promise<APIResponse> => {
   try {
     const { data } = await axiosInstance.get(
-      `/images/search?limit=10&page=${page}`
+      `/images/search?limit=${queryLimit}&page=${page}`
     )
     const nextBatchUrl = getNextBatchUrl(data.length, page, '/')
     return { result: data, next: nextBatchUrl }
@@ -25,7 +27,7 @@ const getCatsByBreed = async (
 ): Promise<APIResponse> => {
   try {
     const { data } = await axiosInstance.get(
-      `/images/search?breed_ids=${breed}&limit=10&page=${page}`
+      `/images/search?breed_ids=${breed}&limit=${queryLimit}&page=${page}`
     )
     const nextBatchUrl = getNextBatchUrl(data.length, page, `/breeds/${breed}`)
     return { result: data, next: nextBatchUrl }

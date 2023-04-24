@@ -1,5 +1,3 @@
-const APP_BASE_URL = `${process.env.APP_BASE_URL}`
-
 const getNextBatchUrl = (
   count: boolean,
   page: string,
@@ -7,7 +5,10 @@ const getNextBatchUrl = (
 ): string | null => {
   // Current result count may not always mean there's more results.
   // But we'll adopt this for now since the Cats API doesn't give us any clue
-  return !!count ? `${APP_BASE_URL}${endpoint}?page=${page + 1}` : null
+  const nextPage = +page + 1
+  return !!count
+    ? `${process.env.APP_BASE_URL}${endpoint}?page=${nextPage}`
+    : null
 }
 
 export default getNextBatchUrl
