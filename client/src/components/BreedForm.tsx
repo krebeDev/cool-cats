@@ -3,22 +3,19 @@ import { BreedFormProps } from './../types/index.type'
 
 const activeBreed = '' // move to context
 
-const BreedForm = ({ fetchCats, breeds }: BreedFormProps): JSX.Element => {
+const BreedForm = ({ onSelect, breeds }: BreedFormProps): JSX.Element => {
   const [breed, setBreed] = React.useState<string>('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+  const handleChange = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ): Promise<void> => {
     setBreed(e.target.value)
+    await onSelect(breed)
   }
 
   React.useEffect(() => {
     setBreed(activeBreed)
   }, [])
-
-  React.useEffect(() => {
-    ;(async () => {
-      await fetchCats(null, breed)
-    })()
-  }, [breed])
 
   return (
     <form>
@@ -28,7 +25,9 @@ const BreedForm = ({ fetchCats, breeds }: BreedFormProps): JSX.Element => {
           Please select
         </option>
         {breeds.map(({ id, name }) => (
-          <option value={id}>{name}</option>
+          <option value={id} key={id}>
+            {name}
+          </option>
         ))}
       </select>
     </form>
