@@ -10,7 +10,7 @@ import {
 const router = Router()
 
 router.get('/', getCats)
-router.get('/:catId', getCat)
+router.get('/cat/:catId', getCat)
 router.get('/breeds', getCatsBreeds)
 router.get('/breeds/:breed', getCatsByBreed)
 
