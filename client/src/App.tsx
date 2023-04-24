@@ -1,24 +1,24 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/Layout'
-import NotFound from './pages/NotFound'
-import Cat from './pages/Cat'
-import Home from './pages/Home'
+import NotFoundPage from './pages/NotFound'
+import CatDetailsPage from './pages/Cat'
+import HomePage from './pages/Home'
 
 const App = (): JSX.Element => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: <HomePage />,
       // TODO: Add errorElement prop
     },
     {
       path: 'cats/:catId',
-      element: <Cat />,
+      element: <CatDetailsPage />,
     },
     {
       path: '*',
-      element: <NotFound />,
+      element: <NotFoundPage />,
     },
   ])
 
