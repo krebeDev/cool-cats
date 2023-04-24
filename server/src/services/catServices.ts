@@ -1,19 +1,19 @@
 import axiosInstance from '../config/axios'
 import { InternalServerError } from '../helpers/apiError'
+import getNextBatchUrl from '../helpers/nextBatch'
 
-interface CatSummary {
-  id: string
-  url: string
-  width: number
-  height: number
+interface APIResponse {
+  result: any[]
+  next: string | null
 }
 
-const getCats = async (pageNumber = '0'): Promise<CatSummary[] | []> => {
+const getCats = async (page = '0'): Promise<APIResponse> => {
   try {
     const { data } = await axiosInstance.get(
-      `/images/search?limit=10&page=${pageNumber}`
+      `/images/search?limit=10&page=${page}`
     )
-    return data
+    const nextBatchUrl = getNextBatchUrl(data.length, page, '/')
+    return { result: data, next: nextBatchUrl }
   } catch (error) {
     throw new InternalServerError()
   }
@@ -21,13 +21,14 @@ const getCats = async (pageNumber = '0'): Promise<CatSummary[] | []> => {
 
 const getCatsByBreed = async (
   breed: string,
-  pageNumber = '0'
-): Promise<CatSummary[] | []> => {
+  page = '0'
+): Promise<APIResponse> => {
   try {
     const { data } = await axiosInstance.get(
-      `/images/search?breed_ids=${breed}&limit=10&page=${pageNumber}`
+      `/images/search?breed_ids=${breed}&limit=10&page=${page}`
     )
-    return data
+    const nextBatchUrl = getNextBatchUrl(data.length, page, `/breeds/${breed}`)
+    return { result: data, next: nextBatchUrl }
   } catch (error) {
     throw new InternalServerError()
   }
