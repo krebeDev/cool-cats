@@ -1,10 +1,14 @@
 import * as React from 'react'
 import { CatSummary } from './../types/index.type'
 
-const CatPhoto = ({ cat }: CatSummary): JSX.Element => {
+interface CatPhotoProp {
+  cat: CatSummary
+}
+
+const CatPhoto = ({ cat }: CatPhotoProp): JSX.Element => {
   return (
-    <li>
-      <img src={cat.ur} alt={`cat-id:${cat.id}`} />
+    <li className='col-lg-4'>
+      <img src={cat.url} alt={`cat-id:${cat.id}`} width={200} height='auto' />
     </li>
   )
 }
