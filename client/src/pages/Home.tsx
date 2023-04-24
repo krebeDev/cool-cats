@@ -1,6 +1,7 @@
 import * as React from 'react'
-import BreedForm from '../components/BreedForm'
+import { useLocation } from 'react-router-dom'
 import axios from 'axios'
+import BreedForm from '../components/BreedForm'
 import { BASE_API_URL } from '../constants'
 import { CatSummary } from './../types/index.type'
 import CatPhoto from '../components/CatPhoto'
@@ -9,22 +10,26 @@ const HomePage = (): JSX.Element => {
   const [cats, setCats] = React.useState<CatSummary[] | []>([])
   const [catBreeds, setCatBreeds] = React.useState<any[]>([])
   const [nextBatchUrl, setNextBatchUrl] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(true)
   const [errors, setErrors] = React.useState<string>('')
+
+  const location = useLocation()
 
   const fetchCats = async (
     next: string | null,
     breed?: string | null,
     sync: boolean = false
   ): Promise<void> => {
-    const apiEndpoint = next
-      ? next
-      : breed
-      ? `${BASE_API_URL}/breeds/${breed}`
-      : `${BASE_API_URL}`
+    const apiEndpoint =
+      next && !breed
+        ? next
+        : breed
+        ? `${BASE_API_URL}/breeds/${breed}`
+        : `${BASE_API_URL}`
 
     try {
       const { data } = await axios.get(apiEndpoint)
+      // TODO: Filter off duplicates
       setCats((cats) => (sync ? [...cats, ...data.result] : data.result))
       setNextBatchUrl(data.next)
       // Handle end of results case
@@ -43,9 +48,9 @@ const HomePage = (): JSX.Element => {
   }
 
   const initPage = async () => {
+    const breed = location.state?.breed // change to context
     try {
-      setLoading(true)
-      await fetchCats(null)
+      await fetchCats(null, breed)
       await fetchCatsBreeds()
     } catch (error) {
       setErrors('An unexpected error occured.')
