@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
-import { BASE_API_URL } from '../constants'
+import { ALERT_MESSAGE, BASE_API_URL } from '../constants'
 import CatDetails from '../components/CatDetails'
 import { Link } from 'react-router-dom'
+import CatsContext from '../context'
+import PageShell from '../components/PageShell'
 
 const CatDetailsPage = (): JSX.Element => {
   const [catDetails, setCatDetails] = React.useState<any>({})
@@ -12,39 +14,34 @@ const CatDetailsPage = (): JSX.Element => {
 
   const location = useLocation()
   const catId = location.pathname.split('/').pop()
+  const { saveSelectedBreed } = React.useContext(CatsContext)
 
   React.useEffect(() => {
     const fetchCatsBreeds = async (): Promise<void> => {
       try {
         const { data } = await axios.get(`${BASE_API_URL}/cat/${catId}`)
         setCatDetails(data)
+        const catBreed = data?.breeds ? data.breeds[0].id : ''
+        saveSelectedBreed(catBreed)
       } catch (error) {
-        setError('An unexpected error occured.')
+        setError(ALERT_MESSAGE)
       } finally {
         setLoading(false)
       }
     }
 
     fetchCatsBreeds()
-  }, [])
-
-  const catBreed = catDetails?.breeds ? catDetails.breeds[0].id : null
+  }, [saveSelectedBreed, catId])
 
   return (
-    <>
-      {loading && <div>Loading...</div>}
-      {!loading && !error && (
-        <section>
-          <div>
-            <Link to='/' state={{ breed: catBreed }}>
-              ← Back
-            </Link>
-          </div>
-          <CatDetails cat={catDetails} />
-        </section>
-      )}
-      {error && <p>{error}</p>}
-    </>
+    <PageShell loading={loading} error={error}>
+      <section>
+        <div>
+          <Link to='/'>← Back</Link>
+        </div>
+        <CatDetails cat={catDetails} />
+      </section>
+    </PageShell>
   )
 }
 
