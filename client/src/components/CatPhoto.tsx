@@ -14,6 +14,7 @@ const CatImage = styled.img`
     height: 400px;
   }
 `
+// TODO: Properly crop images
 
 interface CatPhotoProp {
   cat: CatSummary
