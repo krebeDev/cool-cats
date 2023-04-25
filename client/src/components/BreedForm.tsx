@@ -1,6 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { BreedFormProps } from './../types/index.type'
 import CatsContext from '../context'
+import { Form } from 'react-bootstrap'
 
 const BreedForm = ({ onSelect }: BreedFormProps): JSX.Element => {
   const { catsState, saveSelectedBreed } = React.useContext(CatsContext)
@@ -14,19 +15,21 @@ const BreedForm = ({ onSelect }: BreedFormProps): JSX.Element => {
   }
 
   return (
-    <form>
-      <label htmlFor='breed'>Cat Breed:</label>
-      <select name='breed' id='breed' onChange={handleChange} value={breed}>
-        <option value='' disabled={true}>
-          Please select
+    <Form.Select
+      onChange={handleChange}
+      value={breed}
+      aria-label='Cat Breed'
+      size='lg'
+    >
+      <option value='' disabled={true}>
+        Select cat breed
+      </option>
+      {catsState.catBreeds.map(({ id, name }) => (
+        <option value={id} key={id}>
+          {name}
         </option>
-        {catsState.catBreeds.map(({ id, name }) => (
-          <option value={id} key={id}>
-            {name}
-          </option>
-        ))}
-      </select>
-    </form>
+      ))}
+    </Form.Select>
   )
 }
 
