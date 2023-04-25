@@ -1,6 +1,5 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout from './components/Layout'
 import NotFoundPage from './pages/NotFound'
 import CatDetailsPage from './pages/Cat'
 import HomePage from './pages/Home'
@@ -75,9 +74,7 @@ const App = (): JSX.Element => {
 
   return (
     <CatsContext.Provider value={contextValue}>
-      <Layout>
-        <RouterProvider router={router} />
-      </Layout>
+      <RouterProvider router={router} />
     </CatsContext.Provider>
   )
 }
