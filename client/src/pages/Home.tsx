@@ -1,10 +1,17 @@
-import * as React from 'react'
+import React from 'react'
+import { Button } from 'react-bootstrap'
+import styled from 'styled-components'
 import BreedForm from '../components/BreedForm'
 import { ALERT_MESSAGE } from '../constants'
 import CatPhoto from '../components/CatPhoto'
 import CatsContext from '../context'
 import PageShell from '../components/PageShell'
 import _axios from '../config/axios'
+
+const Boxed = styled.div`
+  max-width: 600px;
+  margin: 2rem auto 2rem auto;
+`
 
 const HomePage = (): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(true)
@@ -75,8 +82,10 @@ const HomePage = (): JSX.Element => {
   return (
     <PageShell loading={loading} error={error}>
       <section>
-        <h1>Welcome to the home of cool cats!</h1>
-        <BreedForm onSelect={fetchCatsByBreed} />
+        <h1 className='text-center'>Welcome!</h1>
+        <Boxed>
+          <BreedForm onSelect={fetchCatsByBreed} />
+        </Boxed>
         <div>
           <ul className='row'>
             {catsState.cats.map((cat) => (
@@ -84,14 +93,20 @@ const HomePage = (): JSX.Element => {
             ))}
           </ul>
           {catsState.nextBatchUrl && (
-            <div>
-              <button
+            <div className='text-center pt-5'>
+              <Button
                 type='button'
-                onClick={() => fetchCats(catsState.nextBatchUrl, '', true)}
+                onClick={() =>
+                  fetchCats(
+                    catsState.nextBatchUrl,
+                    catsState.selectedBreed,
+                    true
+                  )
+                }
                 disabled={loading}
               >
                 Load More
-              </button>
+              </Button>
             </div>
           )}
         </div>
