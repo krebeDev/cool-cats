@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { CatsContextType } from './../types/index.type'
 
 const CatsContext = React.createContext<CatsContextType>({} as CatsContextType)

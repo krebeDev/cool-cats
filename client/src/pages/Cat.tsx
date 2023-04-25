@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { ALERT_MESSAGE, BASE_API_URL } from '../constants'
@@ -36,7 +36,7 @@ const CatDetailsPage = (): JSX.Element => {
   return (
     <PageShell loading={loading} error={error}>
       <section>
-        <div>
+        <div className='my-3'>
           <Link to='/'>← Back</Link>
         </div>
         <CatDetails cat={catDetails} />
