@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { BreedFormProps } from './../types/index.type'
+import CatsContext from '../context'
 
-const BreedForm = ({ onSelect, breeds }: BreedFormProps): JSX.Element => {
-  const [breed, setBreed] = React.useState<string>('')
+const BreedForm = ({ onSelect }: BreedFormProps): JSX.Element => {
+  const { catsState, saveSelectedBreed } = React.useContext(CatsContext)
+  const [breed, setBreed] = React.useState<string>(catsState.selectedBreed)
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = e.target
     setBreed(value)
+    saveSelectedBreed(value)
     onSelect(value)
   }
 
@@ -17,7 +20,7 @@ const BreedForm = ({ onSelect, breeds }: BreedFormProps): JSX.Element => {
         <option value='' disabled={true}>
           Please select
         </option>
-        {breeds.map(({ id, name }) => (
+        {catsState.catBreeds.map(({ id, name }) => (
           <option value={id} key={id}>
             {name}
           </option>
