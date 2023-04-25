@@ -11,6 +11,7 @@ const CatPhoto = ({ cat }: CatPhotoProp): JSX.Element => {
     <li className='col-lg-4'>
       <Link to={`/cats/${cat.id}`}>
         <img src={cat.url} alt={`Cat-${cat.id}`} width={200} height='auto' />
+        <span>View Details</span>
       </Link>
     </li>
   )
