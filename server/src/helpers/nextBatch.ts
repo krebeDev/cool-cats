@@ -5,9 +5,9 @@ const getNextBatchUrl = (
   endpoint: string
 ): string | null => {
   const nextPage = +page + 1
-  return count > queryLimit
-    ? `${process.env.APP_BASE_URL}${endpoint}?page=${nextPage}`
-    : null
+  return queryLimit > count
+    ? null
+    : `${process.env.APP_BASE_URL}${endpoint}?page=${nextPage}`
 }
 
 export default getNextBatchUrl
