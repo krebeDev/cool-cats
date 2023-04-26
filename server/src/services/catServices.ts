@@ -14,7 +14,7 @@ const getCats = async (page = '0'): Promise<APIResponse> => {
     const { data } = await axiosInstance.get(
       `/images/search?limit=${queryLimit}&page=${page}`
     )
-    const nextBatchUrl = getNextBatchUrl(data.length, page, '/')
+    const nextBatchUrl = getNextBatchUrl(data.length, queryLimit, page, '/')
     return { result: data, next: nextBatchUrl }
   } catch (error) {
     throw new InternalServerError()
@@ -29,7 +29,12 @@ const getCatsByBreed = async (
     const { data } = await axiosInstance.get(
       `/images/search?breed_ids=${breed}&limit=${queryLimit}&page=${page}`
     )
-    const nextBatchUrl = getNextBatchUrl(data.length, page, `/breeds/${breed}`)
+    const nextBatchUrl = getNextBatchUrl(
+      data.length,
+      queryLimit,
+      page,
+      `/breeds/${breed}`
+    )
     return { result: data, next: nextBatchUrl }
   } catch (error) {
     throw new InternalServerError()
